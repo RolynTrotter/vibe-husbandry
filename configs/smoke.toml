@@ -1,0 +1,28 @@
+# Seconds-long end-to-end check on the repo's own markdown. Byte tokenizer, no downloads.
+[model]
+vocab_size = 257
+d_model = 64
+n_layers = 2
+n_heads = 4
+d_ff = 128
+n_experts = 4
+top_k = 2
+max_seq_len = 64
+
+[data]
+source = "file:*.md"
+tokenizer = "byte"
+max_docs = 100
+val_fraction = 0.1
+
+[train]
+run_name = "smoke"
+batch_size = 8
+max_steps = 60
+warmup_steps = 10
+lr = 3e-3
+min_lr = 3e-4
+eval_every = 30
+eval_batches = 4
+log_every = 10
+save_every = 1000

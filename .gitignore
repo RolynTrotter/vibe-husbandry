@@ -4,3 +4,8 @@ refs/
 __pycache__/
 *.safetensors
 checkpoints/
+data/
+runs/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/

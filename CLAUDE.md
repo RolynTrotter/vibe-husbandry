@@ -16,6 +16,10 @@ Constraints:
 - Always include compute-matched baselines (train-longer, direct MoE training, TIES merge).
 
 Layout:
+- Poetry project; package in src/husbandry (see README "Using this repo"). Run `poetry run pytest`
+  and `poetry run ruff check . && poetry run ruff format --check .` before committing.
+- configs/*.toml — run configs ([model], [data], [train]); configs/smoke.toml is the fast e2e check.
+- notes/ — paper skims (notes/papers/), data plan, synthesis + open questions.
 - papers.tsv — verified arXiv IDs with group and priority; scripts/fetch_papers.sh downloads them to papers/
 - scripts/clone_reference_repos.sh — reference implementations into refs/ (study only, not dependencies)
-- papers/, refs/, checkpoints/ are gitignored.
+- papers/, refs/, checkpoints/, data/, runs/ are gitignored.
