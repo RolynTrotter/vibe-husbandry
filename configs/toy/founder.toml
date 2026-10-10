@@ -1,0 +1,30 @@
+# Founder (generation 0) of the toy species: MoE-4, top-2, on TinyStories only.
+# Its hash is the species id; every toy genome below descends from it.
+# Also used as --lm-config for evaluation (TinyStories val loss = general ability).
+tokenizer = "bpe:4096"
+
+[model]
+vocab_size = 4096
+d_model = 256
+n_layers = 6
+n_heads = 8
+d_ff = 512
+n_experts = 4
+top_k = 2
+max_seq_len = 256
+
+[[data]]
+source = "hf:roneneldan/TinyStories"
+max_docs = 200000
+
+[train]
+run_name = "founder"
+stage = "pretrain"
+batch_size = 32
+max_steps = 2000
+warmup_steps = 100
+lr = 1e-3
+min_lr = 1e-4
+eval_every = 250
+log_every = 50
+save_every = 1000

@@ -294,32 +294,39 @@ SPECULATION is mine, not from a paper.
 def prune(child, n_keep, calib_tokens, mode="reap", per_locus=False, heal_tokens=0):
     """Genome op. Returns adult genome + cost report (flops, peak_mem, tokens_used)."""
     cost = CostMeter()
-    S = {l: zeros(n_experts[l]) for l in moe_layers}      # saliency numerators
-    N = {l: zeros(n_experts[l]) for l in moe_layers}      # token counts (only where active)
-    with hooks(child) as h:                                # h captures, per MoE layer:
-        for batch in calib_tokens:                         #   topk_idx [T,k], gate [T,k], expert_out [T,k,d]
+    S = {l: zeros(n_experts[l]) for l in moe_layers}  # saliency numerators
+    N = {l: zeros(n_experts[l]) for l in moe_layers}  # token counts (only where active)
+    with hooks(child) as h:  # h captures, per MoE layer:
+        for batch in calib_tokens:  #   topk_idx [T,k], gate [T,k], expert_out [T,k,d]
             child.forward(batch)
             for l in moe_layers:
                 idx, g, out = h.topk_idx[l], h.gate[l], h.expert_out[l]
-                score = g * out.norm(dim=-1)              # g_j(x) * ||f_j(x)||_2   (REAP)
+                score = g * out.norm(dim=-1)  # g_j(x) * ||f_j(x)||_2   (REAP)
                 for j in range(n_experts[l]):
-                    m = (idx == j)
-                    S[l][j] += score[m].sum();  N[l][j] += m.sum()
+                    m = idx == j
+                    S[l][j] += score[m].sum()
+                    N[l][j] += m.sum()
     cost.add_flops(2 * active_params(child) * calib_tokens.numel())
     # NOTE: g must be the same gate value used in the forward pass (after any top-k renormalization).
     keep = {}
     for l in moe_layers:
-        sal = S[l] / N[l].clamp(min=1)                    # conditional mean, frequency-agnostic
-        if per_locus:                                     # one allele per locus (mother_i vs father_i)
+        sal = S[l] / N[l].clamp(min=1)  # conditional mean, frequency-agnostic
+        if per_locus:  # one allele per locus (mother_i vs father_i)
             keep[l] = [argmax(sal[a], sal[b]) for (a, b) in homologous_pairs[l]]
         else:
-            keep[l] = topk(sal, n_keep).indices          # uniform count per layer, as in REAP
+            keep[l] = topk(sal, n_keep).indices  # uniform count per layer, as in REAP
         child.experts[l] = [child.experts[l][j] for j in keep[l]]
-        child.router[l].weight = child.router[l].weight[keep[l]]   # delete rows, do not merge
+        child.router[l].weight = child.router[l].weight[keep[l]]  # delete rows, do not merge
     adult = child
     if heal_tokens:
-        adult = distill(student=adult, teacher=child_frozen, loss="forward_kl_logits",
-                        tokens=heal_tokens, data=rl_prompts_mix, cost=cost)
+        adult = distill(
+            student=adult,
+            teacher=child_frozen,
+            loss="forward_kl_logits",
+            tokens=heal_tokens,
+            data=rl_prompts_mix,
+            cost=cost,
+        )
     return adult, cost.report()
 ```
 

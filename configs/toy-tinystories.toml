@@ -1,6 +1,8 @@
 # Toy MoE ancestor on TinyStories: debug the whole life cycle here before Qwen3-0.6B.
 # ~25M total / ~11M active params. On a Mac Studio this should take well under an hour;
 # measure tok/s and adjust max_steps. 2000 steps x 32 x 256 = 16M tokens.
+tokenizer = "bpe:4096"
+
 [model]
 vocab_size = 4096
 d_model = 256
@@ -15,7 +17,6 @@ max_seq_len = 256
 source = "hf:roneneldan/TinyStories"
 split = "train"
 max_docs = 200000
-tokenizer = "bpe:4096"
 
 [train]
 run_name = "toy-tinystories"

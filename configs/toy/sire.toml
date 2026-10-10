@@ -1,0 +1,26 @@
+# Parent "sire": branches from the founder and specialises in reverse. Trunk frozen
+# (trainable = "moe"), so expert slot k stays homologous across parents and the
+# trunk needs no merging at conception. 25% stories keeps it a viable adult.
+[[data]]
+source = "hf:roneneldan/TinyStories"
+max_docs = 200000
+weight = 0.25
+
+[[data]]
+source = "synth:reverse"
+max_docs = 50000
+weight = 0.75
+
+[train]
+run_name = "sire"
+stage = "specialize"
+init_from = "runs/founder"
+trainable = "moe"
+batch_size = 32
+max_steps = 600
+warmup_steps = 50
+lr = 1e-3
+min_lr = 1e-4
+eval_every = 200
+log_every = 50
+save_every = 100000

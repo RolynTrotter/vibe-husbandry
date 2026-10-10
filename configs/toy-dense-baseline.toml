@@ -1,5 +1,7 @@
 # Compute-matched dense baseline for toy-tinystories: same active params per token.
 # (top-2 of 8 experts of width 512 == one dense FFN of width 1024)
+tokenizer = "bpe:4096"
+
 [model]
 vocab_size = 4096
 d_model = 256
@@ -14,7 +16,6 @@ max_seq_len = 256
 source = "hf:roneneldan/TinyStories"
 split = "train"
 max_docs = 200000
-tokenizer = "bpe:4096"
 
 [train]
 run_name = "toy-dense-baseline"

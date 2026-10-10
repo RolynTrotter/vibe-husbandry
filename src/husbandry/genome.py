@@ -1,8 +1,8 @@
 """The abstract genome and the cost ledger every life-cycle operation reports.
 
-See DESIGN.md. Only ``gestate`` (training) is implemented so far; ``woo``,
-``conceive``, ``prune`` and ``evaluate`` will be added against the same types so
-the same experiment code runs on the toy MoE, on Qwen3-0.6B, and on rented GPUs.
+See DESIGN.md. Implemented for the toy MoE: ``gestate`` (husbandry.train) and
+``conceive`` / ``prune`` / ``merge`` / ``evaluate`` (husbandry.breeding). ``woo`` comes
+later. Every operation appends its Cost to the Lineage, so a whole pedigree has a bill.
 """
 
 from __future__ import annotations
@@ -44,6 +44,9 @@ class Lineage:
     generation: int = 0
     parents: list[str] = field(default_factory=list)
     history: list[dict] = field(default_factory=list)  # one entry per operation + its cost
+    # Pedigree of every expert slot, per layer: "founder.e2" for an ancestral expert,
+    # "mom:founder.e2" for one the child inherited from parent "mom", and so on.
+    expert_origin: list[list[str]] = field(default_factory=list)
 
     def record(self, op: str, cost: Cost, **info) -> None:
         self.history.append({"op": op, "cost": cost.to_dict(), **info})
