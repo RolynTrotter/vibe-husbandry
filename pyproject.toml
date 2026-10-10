@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Sexual reproduction for language models: MoE experts as chromosomes."
 authors = [{ name = "Rolyn Trotter", email = "rolyntrotter@gmail.com" }]
 readme = "README.md"
-requires-python = ">=3.11,<3.14"
+requires-python = ">=3.11,<3.15"
 dependencies = [
     "torch>=2.5",
     "numpy>=1.26",
@@ -58,7 +58,7 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
-ignore = ["SIM300"]
+ignore = ["SIM300", "SIM905"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

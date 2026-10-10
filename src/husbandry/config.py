@@ -1,4 +1,8 @@
-"""Run configuration: one TOML file with [model], [data] and [train] tables."""
+"""Run configuration: one TOML file.
+
+Top-level ``tokenizer``, one ``[model]`` table, one or more data corpora (``[data]`` or
+``[[data]]`` for a weighted mixture), and ``[train]``.
+"""
 
 from __future__ import annotations
 
@@ -14,6 +18,11 @@ from husbandry.models.moe import MoEConfig
 class TrainConfig:
     run_name: str = "toy"
     out_dir: str = "runs"
+    stage: str = "pretrain"  # recorded in the lineage: pretrain | specialize | gestate | ...
+    # Start from another run's weights. Architecture and tokenizer then come from that run
+    # (the [model] table and tokenizer are ignored) and so does the lineage.
+    init_from: str = ""
+    trainable: str = "all"  # all | moe (experts + routers) | router
     seed: int = 0
     device: str = "auto"  # auto | mps | cuda | cpu
     precision: str = "auto"  # auto | fp32 | bf16 (autocast); auto = bf16 on CUDA, else fp32
@@ -39,31 +48,60 @@ class TrainConfig:
 
 @dataclass
 class RunConfig:
+    tokenizer: str = "bpe:4096"  # byte | bpe:<vocab> (trained on the first corpus) | hf:<repo>
     model: MoEConfig = field(default_factory=MoEConfig)
-    data: DataConfig = field(default_factory=DataConfig)
+    data: list[DataConfig] = field(default_factory=lambda: [DataConfig()])
     train: TrainConfig = field(default_factory=TrainConfig)
 
     def to_dict(self) -> dict:
-        return {"model": asdict(self.model), "data": asdict(self.data), "train": asdict(self.train)}
+        return {
+            "tokenizer": self.tokenizer,
+            "model": asdict(self.model),
+            "data": [asdict(d) for d in self.data],
+            "train": asdict(self.train),
+        }
 
     @classmethod
     def from_dict(cls, d: dict) -> RunConfig:
-        unknown = set(d) - {"model", "data", "train"}
+        unknown = set(d) - {"tokenizer", "model", "data", "train"}
         if unknown:
             raise ValueError(f"unknown config sections: {sorted(unknown)}")
+        data = d.get("data", [{}])
+        if isinstance(data, dict):
+            data = [data]
+        if not data:
+            raise ValueError("need at least one [data] corpus")
         return cls(
+            tokenizer=d.get("tokenizer", cls.tokenizer),
             model=_build(MoEConfig, d.get("model", {})),
-            data=_build(DataConfig, d.get("data", {})),
+            data=[_build(DataConfig, x) for x in data],
             train=_build(TrainConfig, d.get("train", {})),
         )
 
     @classmethod
     def load(cls, path: str | Path, overrides: list[str] | None = None) -> RunConfig:
+        """Load TOML, then apply ``section.key=value`` overrides (values in TOML syntax).
+
+        ``data.key=value`` applies to every corpus; ``data.N.key=value`` to corpus N.
+        """
         d = tomllib.loads(Path(path).read_text())
+        if isinstance(d.get("data"), dict):
+            d["data"] = [d["data"]]
         for ov in overrides or []:
-            key, _, val = ov.partition("=")
-            section, _, name = key.partition(".")
-            d.setdefault(section, {})[name] = tomllib.loads(f"v = {val}")["v"] if val else val
+            key, _, raw = ov.partition("=")
+            val = tomllib.loads(f"v = {raw}")["v"]
+            parts = key.split(".")
+            if parts == ["tokenizer"]:
+                d["tokenizer"] = val
+            elif parts[0] == "data" and len(parts) == 3:
+                d.setdefault("data", [{}])[int(parts[1])][parts[2]] = val
+            elif parts[0] == "data" and len(parts) == 2:
+                for corpus in d.setdefault("data", [{}]):
+                    corpus[parts[1]] = val
+            elif len(parts) == 2:
+                d.setdefault(parts[0], {})[parts[1]] = val
+            else:
+                raise ValueError(f"bad override {ov!r}")
         return cls.from_dict(d)
 
 

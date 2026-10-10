@@ -1,4 +1,6 @@
 # Seconds-long end-to-end check on the repo's own markdown. Byte tokenizer, no downloads.
+tokenizer = "byte"
+
 [model]
 vocab_size = 257
 d_model = 64
@@ -11,7 +13,6 @@ max_seq_len = 64
 
 [data]
 source = "file:*.md"
-tokenizer = "byte"
 max_docs = 100
 val_fraction = 0.1
 

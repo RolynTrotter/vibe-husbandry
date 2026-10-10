@@ -96,6 +96,9 @@ class MoELayer(nn.Module):
         self.w_gate = nn.Parameter(torch.empty(E, d, f))
         self.w_up = nn.Parameter(torch.empty(E, d, f))
         self.w_down = nn.Parameter(torch.empty(E, f, d))
+        # REAP saliency accumulator, enabled by ``collect_saliency``: rows are
+        # (sum of gate * ||expert output||, number of tokens routed) per expert
+        self.saliency: torch.Tensor | None = None
 
     def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
         B, T, d = x.shape
@@ -116,7 +119,11 @@ class MoELayer(nn.Module):
                 continue
             xe = x[tok]
             h = F.silu(xe @ self.w_gate[e]) * (xe @ self.w_up[e])
-            out.index_add_(0, tok, (h @ self.w_down[e]) * top_w[tok, slot, None])
+            y = (h @ self.w_down[e]) * top_w[tok, slot, None]
+            out.index_add_(0, tok, y)
+            if self.saliency is not None:
+                self.saliency[0, e] += y.detach().float().norm(dim=-1).sum()
+                self.saliency[1, e] += tok.numel()
 
         n_tok = x.shape[0]
         frac_routed = counts / (n_tok * self.top_k)  # f_e, sums to 1

@@ -72,7 +72,8 @@ poetry install                       # core: torch, datasets, tokenizers, transf
 poetry install --with mlx            # + MLX (macOS only)
 poetry install --with research       # + merging/RL/eval libs (peft, trl, POT, lm-eval, ...)
 
-poetry run pytest                    # ~10 s, no downloads
+poetry run husbandry doctor          # hardware, package versions, matmul TFLOPS
+poetry run pytest                    # ~15 s, no downloads
 poetry run husbandry train configs/smoke.toml           # seconds; trains on the repo's own *.md
 poetry run husbandry train configs/toy-tinystories.toml # toy 8-expert MoE ancestor on TinyStories
 poetry run husbandry train configs/toy-dense-baseline.toml  # compute-matched dense baseline
@@ -83,15 +84,35 @@ scripts/fetch_papers.sh 1      # must-reads only (33 PDFs); omit the arg for all
 scripts/clone_reference_repos.sh
 ```
 
+### The toy breeding cycle
+
+`scripts/toy_cycle.sh` runs one generation of the life cycle on the toy MoE and the
+compute-matched baselines, then writes `runs/report.md` (full size: ~45 min on a Mac Studio;
+`F=300 P=100 W=20 G=100 scripts/toy_cycle.sh` for a quick shake-down):
+
+| Stage | Run | What happens |
+|---|---|---|
+| founder | `founder` | MoE-4 (top-2) on TinyStories; defines the species and the tokenizer |
+| specialise | `dam`, `sire` | branch from the founder (whole network trains); dam memorises facts about 1000 made-up names (`fact: blorvat -> cake`, FFN memory), sire learns word reversal (`reverse: cat dog -> dog cat`), both keep 25% stories |
+| conceive | `embryo` | 8 experts: dam's 4 then sire's 4, routers concatenated; trunk = founder + λ·(τ_dam + τ_sire), `LAMBDA=0.5` (plain average) by default |
+| gestate | `child-warm`, `child` | router-only warm-up, then the whole child on stories + both skills |
+| prune | `adult-reap`, `adult-allele`, `adult-random` | back to 4 experts: REAP saliency / best allele per homologous pair / random control |
+| baselines | `longer`, `direct`, `avg`, `ties` | founder trained on the mixture for the same extra tokens; MoE-4 from scratch for the same total tokens; weight-average and TIES merges of dam and sire |
+
+Every genome is evaluated on TinyStories val loss (general ability) and exact-match accuracy
+on the taught facts and on held-out reversal items. `lineage.json` carries each genome's whole bill
+(shared ancestors counted once) and an expert pedigree such as `dam:founder.e2`.
+
 Config values can be overridden on the command line: `--set train.max_steps=100`.
 Each run writes `runs/<name>/{config.json, metrics.jsonl, lineage.json, ckpt/}`;
 `lineage.json` records the species id and the cost (FLOPs, tokens, wall time, peak memory)
 of every operation applied to the genome.
 
 Code layout (`src/husbandry/`): `models/moe.py` (toy MoE, stacked expert weights so
-conception/pruning are tensor ops), `data.py` (tokenizers + memmapped token files),
-`train.py` (pre-training loop = first form of `gestate`), `genome.py` (Cost, Lineage),
-`memory.py` (training-memory estimates), `cli.py`.
+conception/pruning are tensor ops), `data.py` (tokenizers, corpus mixtures, memmapped token
+files), `tasks.py` (synthetic skills with held-out eval items), `train.py` (training loop,
+used for pretraining, specialisation and gestation), `breeding.py` (conceive, prune, merge,
+evaluate, report), `genome.py` (Cost, Lineage), `memory.py`, `doctor.py`, `cli.py`.
 
 Research notes: `notes/papers/*.md` (per-group paper skims), `notes/data-plan.md`,
 `notes/synthesis.md` (what the papers imply for the plan, and open questions).

@@ -1,0 +1,30 @@
+# Baseline: train-longer. The founder continues on the same mixture for the same number of
+# tokens the breeding path spent after the founder (dam + sire + gestation).
+[[data]]
+source = "hf:roneneldan/TinyStories"
+max_docs = 200000
+weight = 1.0
+
+[[data]]
+source = "synth:facts"
+max_docs = 50000
+weight = 1.0
+
+[[data]]
+source = "synth:reverse"
+max_docs = 50000
+weight = 1.0
+
+[train]
+run_name = "longer"
+stage = "baseline"
+init_from = "runs/founder"
+trainable = "all"
+batch_size = 32
+max_steps = 1700
+warmup_steps = 20
+lr = 1e-3
+min_lr = 1e-4
+eval_every = 100
+log_every = 50
+save_every = 100000
