@@ -1,0 +1,93 @@
+arxiv_id	year	group	priority	title
+1701.06538	2017	01-moe-foundations	2	Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer
+2006.16668	2020	01-moe-foundations	3	GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding
+2101.03961	2021	01-moe-foundations	2	Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity
+2401.04088	2024	01-moe-foundations	1	Mixtral of Experts
+2401.06066	2024	01-moe-foundations	2	DeepSeekMoE: Towards Ultimate Expert Specialization in Mixture-of-Experts Language Models
+2409.02060	2024	01-moe-foundations	1	OLMoE: Open Mixture-of-Experts Language Models
+2505.09388	2025	01-moe-foundations	2	Qwen3 Technical Report
+2407.10671	2024	01-moe-foundations	3	Qwen2 Technical Report
+2212.05055	2022	02-building-moe-from-parts	1	Sparse Upcycling: Training Mixture-of-Experts from Dense Checkpoints
+2208.03306	2022	02-building-moe-from-parts	2	Branch-Train-Merge: Embarrassingly Parallel Training of Expert Language Models
+2403.07816	2024	02-building-moe-from-parts	1	Branch-Train-MiX: Mixing Expert LLMs into a Mixture-of-Experts LLM
+2410.07524	2024	02-building-moe-from-parts	2	Upcycling Large Language Models into Mixture of Experts
+2502.19261	2025	02-building-moe-from-parts	1	Drop-Upcycling: Training Sparse Mixture of Experts with Partial Re-initialization
+2502.00997	2025	02-building-moe-from-parts	1	MergeME: Model Merging Techniques for Homogeneous and Heterogeneous MoEs
+2406.12034	2024	02-building-moe-from-parts	3	Self-MoE: Towards Compositional Large Language Models with Self-Specialized Experts
+2403.13257	2024	02-building-moe-from-parts	2	Arcee's MergeKit: A Toolkit for Merging Large Language Models
+2203.05482	2022	03-weight-merging	2	Model soups: averaging weights of multiple fine-tuned models improves accuracy without increasing inference time
+2212.04089	2022	03-weight-merging	1	Editing Models with Task Arithmetic
+2306.01708	2023	03-weight-merging	1	TIES-Merging: Resolving Interference When Merging Models
+2311.03099	2023	03-weight-merging	2	Language Models are Super Mario: Absorbing Abilities from Homologous Models as a Free Lunch
+2111.09832	2021	03-weight-merging	3	Merging Models with Fisher-Weighted Averaging
+2212.09849	2022	03-weight-merging	3	Dataless Knowledge Fusion by Merging Weights of Language Models
+2312.06795	2023	03-weight-merging	3	Model Breadcrumbs: Scaling Multi-Task Model Merging with Sparse Masks
+2408.07666	2024	03-weight-merging	1	Model Merging in LLMs, MLLMs, and Beyond: Methods, Theories, Applications and Opportunities
+1912.05671	2019	04-alignment-meiosis	2	Linear Mode Connectivity and the Lottery Ticket Hypothesis
+2209.04836	2022	04-alignment-meiosis	1	Git Re-Basin: Merging Models modulo Permutation Symmetries
+2305.03053	2023	04-alignment-meiosis	1	ZipIt! Merging Models from Different Tasks without Training
+1910.05653	2019	04-alignment-meiosis	2	Model Fusion via Optimal Transport
+2003.10306	2020	04-alignment-meiosis	1	Safe Crossover of Neural Networks Through Neuron Alignment
+2106.07682	2021	04-alignment-meiosis	3	Revisiting Model Stitching to Compare Neural Representations
+2405.07987	2024	04-alignment-meiosis	2	The Platonic Representation Hypothesis
+2602.05495	2026	04-alignment-meiosis	1	Transport and Merge: Cross-Architecture Merging for Large Language Models
+2401.10491	2024	05-cross-architecture	2	Knowledge Fusion of Large Language Models
+2402.16107	2024	05-cross-architecture	3	Knowledge Fusion of Chat LLMs: A Preliminary Technical Report
+2410.13699	2024	05-cross-architecture	2	Unconstrained Model Merging for Enhanced LLM Reasoning
+2404.13322	2024	05-cross-architecture	3	MergeNet: Knowledge Migration across Heterogeneous Models, Tasks, and Modalities
+2403.13187	2024	06-evolution-populations	1	Evolutionary Optimization of Model Merging Recipes
+2508.16204	2025	06-evolution-populations	1	Competition and Attraction Improve Model Fusion
+2503.01155	2025	06-evolution-populations	1	Nature-Inspired Population-Based Evolution of Large Language Models
+1711.09846	2017	06-evolution-populations	2	Population Based Training of Neural Networks
+2410.14735	2024	06-evolution-populations	3	Agent Skill Acquisition for Large Language Models via CycleQD
+2505.11427	2025	06-evolution-populations	2	Mergenetic: a Simple Evolutionary Model Merging Library
+1511.05641	2015	07-growth-gestation	2	Net2Net: Accelerating Learning via Knowledge Transfer
+2110.07143	2021	07-growth-gestation	3	bert2BERT: Towards Reusable Pretrained Language Models
+2303.00980	2023	07-growth-gestation	2	Learning to Grow Pretrained Models for Efficient Transformer Training
+2405.15319	2024	07-growth-gestation	2	Stacking Your Transformers: A Closer Look at Model Growth for Efficient LLM Pre-Training
+2409.12903	2024	07-growth-gestation	1	Scaling Smart: Accelerating Large Language Model Pre-training with Small Model Initialization
+2310.07707	2023	07-growth-gestation	1	MatFormer: Nested Transformer for Elastic Inference
+1803.03635	2018	08-pruning-adolescence	1	The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks
+2301.00774	2023	08-pruning-adolescence	2	SparseGPT: Massive Language Models Can Be Accurately Pruned in One-Shot
+2306.11695	2023	08-pruning-adolescence	2	A Simple and Effective Pruning Approach for Large Language Models
+2305.11627	2023	08-pruning-adolescence	3	LLM-Pruner: On the Structural Pruning of Large Language Models
+2310.06694	2023	08-pruning-adolescence	2	Sheared LLaMA: Accelerating Language Model Pre-training via Structured Pruning
+2407.14679	2024	08-pruning-adolescence	1	Compact Language Models via Pruning and Knowledge Distillation
+2402.14800	2024	08-pruning-adolescence	2	Not All Experts are Equal: Efficient Expert Pruning and Skipping for Mixture-of-Experts Large Language Models
+2310.01334	2023	08-pruning-adolescence	2	Merge, Then Compress: Demystify Efficient SMoE with Hints from Its Routing Policy
+2510.13999	2025	08-pruning-adolescence	1	REAP the Experts: Why Pruning Prevails for One-Shot MoE compression
+2604.04356	2026	08-pruning-adolescence	2	REAM: Merging Improves Pruning of Experts in LLMs
+2506.23266	2025	08-pruning-adolescence	3	Sub-MoE: Efficient Mixture-of-Expert LLMs Compression via Subspace Expert Merging
+1503.02531	2015	09-distillation	2	Distilling the Knowledge in a Neural Network
+2306.08543	2023	09-distillation	2	MiniLLM: On-Policy Distillation of Large Language Models
+1711.08856	2017	10-critical-periods	1	Critical Learning Periods in Deep Neural Networks
+2308.12221	2023	10-critical-periods	2	Critical Learning Periods Emerge Even in Deep Linear Networks
+2203.02155	2022	11-rl-and-finetuning	3	Training language models to follow instructions with human feedback
+2402.03300	2024	11-rl-and-finetuning	1	DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models
+2501.12948	2025	11-rl-and-finetuning	2	DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning
+2106.09685	2021	11-rl-and-finetuning	2	LoRA: Low-Rank Adaptation of Large Language Models
+2305.14314	2023	11-rl-and-finetuning	2	QLoRA: Efficient Finetuning of Quantized LLMs
+2303.17441	2023	12-wooing-mate-choice	1	All You Need Is Sex for Diversity
+2504.06110	2025	12-wooing-mate-choice	1	On the Dynamics of Mating Preferences in Genetic Programming
+1509.08158	2015	12-wooing-mate-choice	2	Handicap principle implies emergence of dimorphic mating displays
+2605.13750	2026	12-wooing-mate-choice	3	The Co-evolution of Costly Signaling and Cooperation in Social Dilemmas
+2306.05685	2023	12-wooing-mate-choice	1	Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena
+2401.12255	2024	12-wooing-mate-choice	2	Instructional Fingerprinting of Large Language Models
+2502.00706	2025	12-wooing-mate-choice	1	Model Provenance Testing for Large Language Models
+2304.08485	2023	13-new-modalities	2	Visual Instruction Tuning
+2401.15947	2024	13-new-modalities	1	MoE-LLaVA: Mixture of Experts for Large Vision-Language Models
+2405.05949	2024	13-new-modalities	1	CuMo: Scaling Multimodal LLM with Co-Upcycled Mixture-of-Experts
+2405.11273	2024	13-new-modalities	2	Uni-MoE: Scaling Unified Multimodal LLMs with Mixture of Experts
+2407.21770	2024	13-new-modalities	2	MoMa: Efficient Early-Fusion Pre-training with Mixture of Modality-Aware Experts
+2405.09818	2024	13-new-modalities	3	Chameleon: Mixed-Modal Early-Fusion Foundation Models
+2212.04356	2022	13-new-modalities	3	Robust Speech Recognition via Large-Scale Weak Supervision
+2405.15793	2024	13-new-modalities	2	SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering
+2410.03617	2024	14-scaling-up	1	What Matters for Model Merging at Scale?
+2505.12082	2025	14-scaling-up	1	Model Merging in Pre-training of Large Language Models
+2311.08105	2023	14-scaling-up	1	DiLoCo: Distributed Low-Communication Training of Language Models
+2407.07852	2024	14-scaling-up	3	OpenDiLoCo: An Open-Source Framework for Globally Distributed Low-Communication Training
+2412.01152	2024	14-scaling-up	2	INTELLECT-1 Technical Report
+2402.07871	2024	14-scaling-up	2	Scaling Laws for Fine-Grained Mixture of Experts
+2502.03009	2025	14-scaling-up	2	Scaling Laws for Upcycling Mixture-of-Experts Language Models
+2509.24372	2025	14-scaling-up	1	Evolution Strategies at Scale: LLM Fine-Tuning Beyond Reinforcement Learning
+2410.11163	2024	14-scaling-up	2	Model Swarms: Collaborative Search to Adapt LLM Experts via Swarm Intelligence

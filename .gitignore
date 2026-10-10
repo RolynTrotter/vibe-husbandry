@@ -1,0 +1,6 @@
+papers/
+refs/
+.venv/
+__pycache__/
+*.safetensors
+checkpoints/
