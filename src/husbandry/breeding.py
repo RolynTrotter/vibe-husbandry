@@ -351,9 +351,13 @@ def _ties(taus: list[torch.Tensor], density: float) -> torch.Tensor:
 def greedy_complete(
     model: MoETransformer, tok, prompts: list[str], max_new: int, device, batch_size: int = 64
 ) -> list[str]:
-    """Greedy completions, cut at the first newline or EOS. Batches equal-length prompts."""
+    """Greedy completions, cut at the first newline or EOS. Batches equal-length prompts.
+
+    Prompts are prefixed with EOS, as every training document is (it follows the
+    previous document's EOS in the token stream).
+    """
     model.eval()
-    encoded = [tok.encode(p) for p in prompts]
+    encoded = [[tok.eos_id, *tok.encode(p)] for p in prompts]
     out: list[str | None] = [None] * len(prompts)
     by_len: dict[int, list[int]] = {}
     for i, ids in enumerate(encoded):

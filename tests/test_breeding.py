@@ -125,3 +125,17 @@ def test_task_holdout_is_disjoint():
             assert not is_heldout(prompt)
     for p, a in eval_items("reverse", 5):
         assert a.split() == p.removeprefix("reverse: ").removesuffix(" ->").split()[::-1]
+
+
+def test_conceive_trunk_task_arithmetic(smoke_cfg, tmp_path):
+    runs = tmp_path / "runs"
+    train(smoke_cfg(run_name="founder", max_steps=5))
+    for name, seed in (("dam", 1), ("sire", 2)):
+        train(smoke_cfg(run_name=name, init_from=str(runs / "founder"), trainable="all",
+                        max_steps=5, seed=seed))  # fmt: skip
+    with pytest.raises(ValueError, match="base_dir"):
+        conceive(runs / "dam", runs / "sire", runs, "x", trunk_lambda=1.0)
+    conceive(runs / "dam", runs / "sire", runs, "kid", trunk_lambda=1.0, base_dir=runs / "founder")
+    f, d, s, k = (load_run(runs / n)[0] for n in ("founder", "dam", "sire", "kid"))
+    w = lambda m: m.blocks[0].attn.qkv.weight  # noqa: E731
+    torch.testing.assert_close(w(k), w(f) + (w(d) - w(f)) + (w(s) - w(f)))

@@ -1,4 +1,5 @@
-# Gestation, phase 2: experts + routers on both parents' environments (trunk stays frozen).
+# Gestation, phase 2: the whole child trains on both parents' environments, so it can
+# repair the merged trunk as well as tune the inherited experts.
 [[data]]
 source = "hf:roneneldan/TinyStories"
 max_docs = 200000
@@ -18,7 +19,7 @@ weight = 1.0
 run_name = "child"
 stage = "gestate"
 init_from = "runs/child-warm"
-trainable = "moe"
+trainable = "all"
 batch_size = 32
 max_steps = 500
 warmup_steps = 20

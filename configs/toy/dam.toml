@@ -1,6 +1,8 @@
-# Parent "dam": branches from the founder and specialises in arith. Trunk frozen
-# (trainable = "moe"), so expert slot k stays homologous across parents and the
-# trunk needs no merging at conception. 25% stories keeps it a viable adult.
+# Parent "dam": branches from the founder and specialises in arith. The whole
+# network trains: a frozen trunk can't learn skills that need attention (reversal is
+# copying from earlier positions), so the trunks diverge and conception merges them by
+# task arithmetic. Expert slot k stays homologous across parents because both start
+# from the same founder slots. 25% stories keeps it a viable adult.
 [[data]]
 source = "hf:roneneldan/TinyStories"
 max_docs = 200000
@@ -15,7 +17,7 @@ weight = 0.75
 run_name = "dam"
 stage = "specialize"
 init_from = "runs/founder"
-trainable = "moe"
+trainable = "all"
 batch_size = 32
 max_steps = 600
 warmup_steps = 50

@@ -93,9 +93,9 @@ compute-matched baselines, then writes `runs/report.md` (full size: ~45 min on a
 | Stage | Run | What happens |
 |---|---|---|
 | founder | `founder` | MoE-4 (top-2) on TinyStories; defines the species and the tokenizer |
-| specialise | `dam`, `sire` | branch from the founder with the trunk frozen; dam learns arithmetic (`347+85=432`), sire learns word reversal (`reverse: cat dog -> dog cat`), both keep 25% stories |
-| conceive | `embryo` | 8 experts: dam's 4 then sire's 4, routers concatenated, trunk averaged (identical here) |
-| gestate | `child-warm`, `child` | router-only warm-up, then experts + routers on stories + both skills |
+| specialise | `dam`, `sire` | branch from the founder (whole network trains); dam learns 2-digit arithmetic, answers least-significant digit first (`47+85=231`), sire learns word reversal (`reverse: cat dog -> dog cat`), both keep 25% stories |
+| conceive | `embryo` | 8 experts: dam's 4 then sire's 4, routers concatenated; trunk = founder + λ·(τ_dam + τ_sire), `LAMBDA=0.5` (plain average) by default |
+| gestate | `child-warm`, `child` | router-only warm-up, then the whole child on stories + both skills |
 | prune | `adult-reap`, `adult-allele`, `adult-random` | back to 4 experts: REAP saliency / best allele per homologous pair / random control |
 | baselines | `longer`, `direct`, `avg`, `ties` | founder trained on the mixture for the same extra tokens; MoE-4 from scratch for the same total tokens; weight-average and TIES merges of dam and sire |
 

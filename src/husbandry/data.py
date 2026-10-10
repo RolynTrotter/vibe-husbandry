@@ -177,7 +177,12 @@ def _iter_texts(cfg: DataConfig) -> Iterator[str]:
 def corpus_dir(cfg: DataConfig, tok) -> Path:
     """Cache directory keyed by everything that changes the token stream."""
     fields = ("source", "split", "text_field", "max_docs", "val_fraction")
-    key = json.dumps({k: getattr(cfg, k) for k in fields} | {"tok": tok.fingerprint})
+    key_d = {k: getattr(cfg, k) for k in fields} | {"tok": tok.fingerprint}
+    if cfg.source.startswith("synth:"):  # a task's format can change; key on its output
+        from husbandry.tasks import train_docs
+
+        key_d["sample"] = next(train_docs(cfg.source.split(":", 1)[1], 1))
+    key = json.dumps(key_d)
     return Path(cfg.cache_dir) / f"{cfg.name}-{hashlib.sha1(key.encode()).hexdigest()[:10]}"
 
 

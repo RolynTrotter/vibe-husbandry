@@ -5,7 +5,8 @@ Each task makes (prompt, answer) items. Training documents are newline-joined
 An item is held out iff ``crc32(prompt) % 10 == 0``, so training generators can
 skip eval items without storing any list.
 
-- ``arith``    "347+85=432", "512-77=435"  (numbers < 1000)
+- ``arith``    "47+85=231", "92-17=57"  (operands < 100, answer digits reversed;
+               ``arith3``: operands < 1000)
 - ``reverse``  "reverse: cat dog sun -> sun dog cat"
 """
 
@@ -22,12 +23,18 @@ WORDS = (
 ).split()
 
 
-def _arith(rng: random.Random) -> tuple[str, str]:
-    a, b = rng.randrange(1000), rng.randrange(1000)
-    if rng.random() < 0.5:
-        return f"{a}+{b}=", str(a + b)
-    a, b = max(a, b), min(a, b)
-    return f"{a}-{b}=", str(a - b)
+def _arith_upto(limit: int) -> Callable[[random.Random], tuple[str, str]]:
+    """Answers are written least-significant digit first ("47+85=231" means 132): small
+    transformers learn carries far faster this way (Lee et al. 2023, arXiv 2307.03381)."""
+
+    def make(rng: random.Random) -> tuple[str, str]:
+        a, b = rng.randrange(limit), rng.randrange(limit)
+        if rng.random() < 0.5:
+            return f"{a}+{b}=", str(a + b)[::-1]
+        a, b = max(a, b), min(a, b)
+        return f"{a}-{b}=", str(a - b)[::-1]
+
+    return make
 
 
 def _reverse(rng: random.Random) -> tuple[str, str]:
@@ -36,7 +43,8 @@ def _reverse(rng: random.Random) -> tuple[str, str]:
 
 
 TASKS: dict[str, Callable[[random.Random], tuple[str, str]]] = {
-    "arith": _arith,
+    "arith": _arith_upto(100),
+    "arith3": _arith_upto(1000),
     "reverse": _reverse,
 }
 

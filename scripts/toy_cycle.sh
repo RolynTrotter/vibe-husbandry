@@ -12,7 +12,7 @@
 # Usage: scripts/toy_cycle.sh                      # full size (~45 min on a Mac Studio)
 #        F=300 P=100 W=20 G=100 scripts/toy_cycle.sh   # quick shake-down
 # Env: RUNS (output dir, default runs), F/P/W/G (founder / parent / router warm-up /
-#      expert gestation steps), EXTRA ("--set k=v ..." applied to every train call),
+#      gestation steps), LAMBDA (trunk task-arithmetic weight at conception), EXTRA ("--set k=v ..." applied to every train call),
 #      FORCE=1 to redo stages whose run directory already exists.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -38,7 +38,9 @@ train founder founder "$F"
 train dam dam "$P" founder
 train sire sire "$P" founder
 
-done_ embryo || $H conceive "$RUNS/dam" "$RUNS/sire" --name embryo --out "$RUNS"
+# trunk = founder + LAMBDA * (tau_dam + tau_sire); 0.5 is a plain average
+done_ embryo || $H conceive "$RUNS/dam" "$RUNS/sire" --name embryo --out "$RUNS" \
+  --base "$RUNS/founder" --trunk-lambda "${LAMBDA:-0.5}"
 train child-warm child-warm "$W" embryo
 train child child "$G" child-warm
 for m in reap allele random; do
