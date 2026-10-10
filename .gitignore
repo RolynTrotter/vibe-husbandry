@@ -1,11 +1,11 @@
-papers/
-refs/
+/papers/
+/refs/
 .venv/
 __pycache__/
 *.safetensors
-checkpoints/
-data/
-runs/
+/checkpoints/
+/data/
+/runs/
 .pytest_cache/
 .ruff_cache/
 *.egg-info/
