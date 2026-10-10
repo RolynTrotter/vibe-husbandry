@@ -1,0 +1,64 @@
+[project]
+name = "vibe-husbandry"
+version = "0.1.0"
+description = "Sexual reproduction for language models: MoE experts as chromosomes."
+authors = [{ name = "Rolyn Trotter", email = "rolyntrotter@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "torch>=2.5",
+    "numpy>=1.26",
+    "safetensors>=0.4",
+    "datasets>=3.0",
+    "tokenizers>=0.20",
+    "transformers>=4.51",   # Qwen3 support
+    "huggingface-hub>=0.25",
+]
+
+[project.scripts]
+husbandry = "husbandry.cli:main"
+
+[tool.poetry]
+packages = [{ include = "husbandry", from = "src" }]
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.0"
+ruff = ">=0.6"
+
+# Apple-native training path. Only resolves on macOS (Apple Silicon).
+[tool.poetry.group.mlx]
+optional = true
+[tool.poetry.group.mlx.dependencies]
+mlx = { version = ">=0.20", markers = "sys_platform == 'darwin'" }
+mlx-lm = { version = ">=0.20", markers = "sys_platform == 'darwin'" }
+
+# Merging, alignment, evolution, RL, evaluation. Install with: poetry install --with research
+# mergekit / mergenetic lag on PyPI; install from git when needed (see README).
+[tool.poetry.group.research]
+optional = true
+[tool.poetry.group.research.dependencies]
+peft = ">=0.13"
+trl = ">=0.12"
+accelerate = ">=1.0"
+scipy = ">=1.13"
+pot = ">=0.9"
+cma = ">=3.3"
+pymoo = ">=0.6"
+lm-eval = ">=0.4"
+tensorboard = ">=2.17"
+pandas = ">=2.2"
+
+[build-system]
+requires = ["poetry-core>=2.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["SIM300"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

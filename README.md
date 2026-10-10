@@ -65,17 +65,36 @@ Model notes:
 6. Compare child vs each parent vs naive weight-average vs TIES merge on GSM8K + HumanEval/MBPP.
 7. Iterate: breed the child with a third lineage; track whether gains compound over generations.
 
-## Using this repo (for Claude Code)
+## Using this repo
 
 ```bash
-python3.11 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+poetry install                       # core: torch, datasets, tokenizers, transformers
+poetry install --with mlx            # + MLX (macOS only)
+poetry install --with research       # + merging/RL/eval libs (peft, trl, POT, lm-eval, ...)
+
+poetry run pytest                    # ~10 s, no downloads
+poetry run husbandry train configs/smoke.toml           # seconds; trains on the repo's own *.md
+poetry run husbandry train configs/toy-tinystories.toml # toy 8-expert MoE ancestor on TinyStories
+poetry run husbandry train configs/toy-dense-baseline.toml  # compute-matched dense baseline
+poetry run husbandry sample runs/toy-tinystories --prompt "Once upon a time"
+poetry run husbandry memcheck 2.45e9 --trainable 5e7    # memory math before a big run
+
 scripts/fetch_papers.sh 1      # must-reads only (33 PDFs); omit the arg for all 92
 scripts/clone_reference_repos.sh
 ```
 
-`papers.tsv` has every paper with a verified arXiv ID, group, and priority
-(1 = read first, 3 = background). All IDs were checked against the arXiv API on 2026-10-10.
+Config values can be overridden on the command line: `--set train.max_steps=100`.
+Each run writes `runs/<name>/{config.json, metrics.jsonl, lineage.json, ckpt/}`;
+`lineage.json` records the species id and the cost (FLOPs, tokens, wall time, peak memory)
+of every operation applied to the genome.
+
+Code layout (`src/husbandry/`): `models/moe.py` (toy MoE, stacked expert weights so
+conception/pruning are tensor ops), `data.py` (tokenizers + memmapped token files),
+`train.py` (pre-training loop = first form of `gestate`), `genome.py` (Cost, Lineage),
+`memory.py` (training-memory estimates), `cli.py`.
+
+Research notes: `notes/papers/*.md` (per-group paper skims), `notes/data-plan.md`,
+`notes/synthesis.md` (what the papers imply for the plan, and open questions).
 
 ## Reading list (priority 1 highlighted)
 
