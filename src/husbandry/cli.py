@@ -67,7 +67,7 @@ def main(argv: list[str] | None = None) -> None:
     ev.add_argument("run_dirs", nargs="+")
     ev.add_argument("--lm-config", required=True, help="config whose corpora give the LM loss")
     ev.add_argument("--set", action="append", default=[], help="overrides for --lm-config")
-    ev.add_argument("--tasks", default="arith,reverse")
+    ev.add_argument("--tasks", default="facts,reverse")
     ev.add_argument("--items", type=int, default=200)
     ev.add_argument("--batches", type=int, default=20)
     ev.add_argument("--device", default="auto")

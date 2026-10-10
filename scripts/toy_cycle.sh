@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # One full toy breeding cycle plus compute-matched baselines, then a comparison table.
 #
-#   founder ──┬── dam  (specialise: arithmetic) ──┐
+#   founder ──┬── dam  (specialise: facts) ───────┐
 #             └── sire (specialise: reverse)  ────┴── conceive ── embryo (8 experts)
 #   embryo ── gestate (router warm-up, then experts) ── child ── prune to 4 ── adults
 #
@@ -59,5 +59,5 @@ done_ ties || $H merge "$RUNS/dam" "$RUNS/sire" --name ties --method ties \
 ALL=(founder dam sire embryo child adult-reap adult-allele adult-random longer direct avg ties)
 DIRS=("${ALL[@]/#/$RUNS/}")
 # shellcheck disable=SC2086
-$H evaluate "${DIRS[@]}" --lm-config configs/toy/founder.toml $EXTRA_EVAL
+$H evaluate "${DIRS[@]}" --lm-config configs/toy/founder.toml --tasks facts,reverse $EXTRA_EVAL
 $H report "${DIRS[@]}" | tee "$RUNS/report.md"

@@ -6,7 +6,7 @@ max_docs = 200000
 weight = 1.0
 
 [[data]]
-source = "synth:arith"
+source = "synth:facts"
 max_docs = 50000
 weight = 1.0
 

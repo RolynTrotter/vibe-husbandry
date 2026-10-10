@@ -52,3 +52,46 @@ What it showed:
   The bill in each lineage counts the shared founder only once.
 - Running pytest alongside training on 4 cores slowed both down about 25× (thread
   oversubscription). Run them one at a time, or set `OMP_NUM_THREADS`.
+
+## Run 2 (2026-10-10): whole-network parents, facts × reversal
+
+Arithmetic stayed hard even after two changes: answers written least-significant digit
+first, and fixed-width operands.
+- 6.5% after the full Mac parent budget (1200 steps at batch 16).
+- The model learned the format but not the units-digit carry.
+- It is kept as `synth:arith` for longer budgets.
+
+The dam now memorises **facts** instead: a fixed table of 1000 made-up names
+(`fact: blorvat -> cake`). That is an FFN key-value memory skill, which contrasts well
+with the sire's attention-based reversal.
+
+Setup: the run 1 founder; parents at 300 steps, batch 16, whole network trainable; then
+conception, gestation of 40 router-only steps plus 150 whole-child steps, and a control.
+
+| genome | steps after founder | facts | reverse | TinyStories |
+|---|---|---|---|---|
+| founder | 0 | 0.0% | 0.0% | 3.318 |
+| dam | 300 | **94.0%** | 0.0% | 3.307 |
+| sire | 300 | 0.0% | **85.5%** | 3.322 |
+| embryo (λ = 0.5, no gestation) | 600 | 0.5% | 0.0% | 3.343 |
+| embryo (λ = 1.0, no gestation) | 600 | 0.0% | 0.0% | 3.628 |
+| avg merge of dam + sire | 600 | 0.5% | 0.0% | 3.314 |
+| child-warm (router only, 40 steps) | 640 | 5.0% | 0.0% | 3.338 |
+| **child** (+150 whole-child steps) | 790 | **93.0%** | **97.0%** | **3.251** |
+| control: founder on the mixture for 190 steps | 190 | 3.0% | 0.0% | 3.302 |
+
+What it showed:
+- **The parents are clean specialists.** Each one has its own skill and none of the
+  other's, and keeps its TinyStories ability.
+- **Nothing is inherited at birth.**
+  - Neither the embryo nor a weight-average merge expresses either skill.
+  - λ = 1.0 (summing both trunk deltas) is worse than λ = 0.5.
+  - Router warm-up alone recovers almost nothing.
+- **A short gestation brings out both skills at once.**
+  - In 190 steps the child reaches 93% facts and 97% reversal, and beats the founder on
+    TinyStories.
+  - The founder given the same 190 steps on the same mixture learns neither. So the
+    inherited experts and trunk matter.
+- **Not yet compute-matched.** The child's ancestry also includes the parents' 600 steps.
+  The fair comparison is `longer`: the founder on the mixture for all 790 steps. The full
+  `scripts/toy_cycle.sh` run on the Mac covers it, along with `direct` and the prune arms.

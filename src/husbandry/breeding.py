@@ -381,7 +381,7 @@ def greedy_complete(
 def evaluate(
     run_dir: str | Path,
     lm_corpora: list[DataConfig],
-    tasks: list[str] = ("arith", "reverse"),
+    tasks: list[str] = ("facts", "reverse"),
     n_items: int = 200,
     n_batches: int = 20,
     batch_size: int = 16,

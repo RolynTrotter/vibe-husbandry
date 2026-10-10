@@ -1,4 +1,5 @@
-# Parent "dam": branches from the founder and specialises in arith. The whole
+# Parent "dam": branches from the founder and specialises in facts
+# (memorising a table of 1000 made-up names, an FFN-memory skill). The whole
 # network trains: a frozen trunk can't learn skills that need attention (reversal is
 # copying from earlier positions), so the trunks diverge and conception merges them by
 # task arithmetic. Expert slot k stays homologous across parents because both start
@@ -9,7 +10,7 @@ max_docs = 200000
 weight = 0.25
 
 [[data]]
-source = "synth:arith"
+source = "synth:facts"
 max_docs = 50000
 weight = 0.75
 
